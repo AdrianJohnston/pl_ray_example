@@ -279,12 +279,16 @@ class ImageClassifier(LightningModule):
 # parser.add_argument("--test-argument", required=True, type=int, help="Required Test Argument for testing with ray")
 # args = parser.parse_args()    
 
-cli = LightningCLI(ImageClassifier,
+class XaminCLI(LightningCLI):
+
+    def add_arguments_to_parser(self, parser):
+        parser.add_argument("--test-argument", required=True, type=int, help="Required Test Argument for testing with ray")
+
+cli = XaminCLI(ImageClassifier,
                        seed_everything_default=1337,
                        save_config_overwrite=True,
                        run=False,
                        trainer_defaults={"logger": lazy_instance(TensorBoardLogger, save_dir="logs")})
-cli.parser.add_argument("--test-argument", required=True, type=int, help="Required Test Argument for testing with ray")
 
 @ray.remote(num_gpus=1)
 def train(cli) -> None:
