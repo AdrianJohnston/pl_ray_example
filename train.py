@@ -138,11 +138,11 @@ class ImageClassifier(LightningModule):
 @ray.remote(num_gpus=1)
 def train() -> None:
 
-    # cli = LightningCLI(ImageClassifier,
-    #                    seed_everything_default=1337,
-    #                    save_config_overwrite=True,
-    #                    run=False,
-    #                    trainer_defaults={"logger": lazy_instance(TensorBoardLogger, save_dir="logs")})
+    cli = LightningCLI(ImageClassifier,
+                       seed_everything_default=1337,
+                       save_config_overwrite=True,
+                       run=False,
+                       trainer_defaults={"logger": lazy_instance(TensorBoardLogger, save_dir="logs")})
 
     # cli.parser.add_argument("--node-ip-address")
     # cli.parser.add_argument(
