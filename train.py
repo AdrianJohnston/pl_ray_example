@@ -11,7 +11,7 @@ from omegaconf import DictConfig, OmegaConf
 from pytorch_lightning.loggers import TensorBoardLogger
 import pytorch_lightning as pl
 from path import Path
-# from pytorch_lightning.utilities.cli import LightningCLI
+from pytorch_lightning.utilities.cli import LightningCLI
 # from ray_lightning import RayStrategy
 import ray
 
@@ -192,6 +192,7 @@ def train() -> None:
 
     #cli.instantiate_classes()
     #cli.trainer.fit(cli.model, datamodule=cli.datamodule)
+    print("SUCCESS")
     return "SUCCESS"
 
 if __name__ == '__main__':
