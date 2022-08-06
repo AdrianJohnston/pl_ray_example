@@ -272,8 +272,8 @@ class ImageClassifier(LightningModule):
 #         )
 
 
-import argparse
-parser = argparse.ArgumentParser(
+from jsonargparse import ArgumentParser
+parser = ArgumentParser(
     description=("Parse addresses for the worker to connect to.")
 )
 parser.add_argument("--test-argument", required=True, type=int, help="Required Test Argument for testing with ray")
