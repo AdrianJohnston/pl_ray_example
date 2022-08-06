@@ -295,7 +295,7 @@ def train(cli) -> None:
 
     print(cli.model)
 
-   
+    # TODO: GPU not availble in head node
 
     # model = cli.model
     # print(model)
