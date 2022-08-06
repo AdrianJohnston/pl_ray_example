@@ -166,7 +166,7 @@ def train() -> None:
     return "SUCCESS"
 
 if __name__ == '__main__':
-    main()
+    # main()
     obj_ref = train.remote()
     result = ray.get(obj_ref)
     print(result)
