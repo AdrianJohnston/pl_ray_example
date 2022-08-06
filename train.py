@@ -135,7 +135,7 @@ class ImageClassifier(LightningModule):
 
         return optimizer
 
-import ray._private.ray_constants as ray_constants
+import ray_cli.ray_constants as ray_constants
 class XaminCLI(LightningCLI):
 
     def add_arguments_to_parser(self, parser):
