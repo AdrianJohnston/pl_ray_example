@@ -138,42 +138,42 @@ class ImageClassifier(LightningModule):
 @ray.remote(num_gpus=1)
 def train() -> None:
 
-    cli = LightningCLI(ImageClassifier,
-                       seed_everything_default=1337,
-                       save_config_overwrite=True,
-                       run=False,
-                       trainer_defaults={"logger": lazy_instance(TensorBoardLogger, save_dir="logs")})
+    # cli = LightningCLI(ImageClassifier,
+    #                    seed_everything_default=1337,
+    #                    save_config_overwrite=True,
+    #                    run=False,
+    #                    trainer_defaults={"logger": lazy_instance(TensorBoardLogger, save_dir="logs")})
 
-    cli.parser.add_argument("--node-ip-address")
-    cli.parser.add_argument(
-        "--node-manager-port", required=True, type=int, help="the port of the worker's node"
-    )
-    cli.parser.add_argument(
-        "--raylet-ip-address",
-        required=False,
-        type=str,
-        default=None,
-        help="the ip address of the worker's raylet",
-    )
-    cli.parser.add_argument(
-        "--redis-address", required=True, type=str, help="the address to use for Redis"
-    )
-    cli.parser.add_argument(
-        "--gcs-address", required=True, type=str, help="the address to use for GCS"
-    )
-    cli.parser.add_argument(
-        "--redis-password",
-        required=False,
-        type=str,
-        default=None,
-        help="the password to use for Redis",
-    )
-    cli.parser.add_argument(
-        "--object-store-name", required=True, type=str, help="the object store's name"
-    )
+    # cli.parser.add_argument("--node-ip-address")
+    # cli.parser.add_argument(
+    #     "--node-manager-port", required=True, type=int, help="the port of the worker's node"
+    # )
+    # cli.parser.add_argument(
+    #     "--raylet-ip-address",
+    #     required=False,
+    #     type=str,
+    #     default=None,
+    #     help="the ip address of the worker's raylet",
+    # )
+    # cli.parser.add_argument(
+    #     "--redis-address", required=True, type=str, help="the address to use for Redis"
+    # )
+    # cli.parser.add_argument(
+    #     "--gcs-address", required=True, type=str, help="the address to use for GCS"
+    # )
+    # cli.parser.add_argument(
+    #     "--redis-password",
+    #     required=False,
+    #     type=str,
+    #     default=None,
+    #     help="the password to use for Redis",
+    # )
+    # cli.parser.add_argument(
+    #     "--object-store-name", required=True, type=str, help="the object store's name"
+    # )
 
-    model = cli.model
-    print(model)
+    # model = cli.model
+    # print(model)
 
     #tb_logger = None  # TensorBoardLogger(save_dir='tb-logs')
     # lr_logger = pl.callbacks.LearningRateLogger()
@@ -190,8 +190,8 @@ def train() -> None:
     #                      **cfg.trainer)
     # trainer.fit(model)
 
-    cli.instantiate_classes()
-    cli.trainer.fit(cli.model, datamodule=cli.datamodule)
+    #cli.instantiate_classes()
+    #cli.trainer.fit(cli.model, datamodule=cli.datamodule)
     return "SUCCESS"
 
 if __name__ == '__main__':
