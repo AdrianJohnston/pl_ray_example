@@ -281,7 +281,8 @@ def train() -> None:
         description=("Parse addresses for the worker to connect to.")
     )
     parser.add_argument("--test-argument", required=True, type=int, help="Required Test Argument for testing with ray")
-
+    args = parser.parse_args()    
+    print(args)
     # cli = XaminCLI(ImageClassifier,
     #                    seed_everything_default=1337,
     #                    save_config_overwrite=True,
