@@ -1,3 +1,4 @@
+import argparse
 import torch
 from torch.nn import functional as F
 from torch import nn
@@ -134,6 +135,8 @@ class ImageClassifier(LightningModule):
 
         return optimizer
 
+from argparse import ArgumentParser
+parser = ArgumentParser()
 
 @ray.remote(num_gpus=1)
 def train() -> None:
