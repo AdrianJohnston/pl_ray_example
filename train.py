@@ -273,16 +273,17 @@ class ImageClassifier(LightningModule):
 
 
 import argparse
+parser = argparse.ArgumentParser(
+    description=("Parse addresses for the worker to connect to.")
+)
+parser.add_argument("--test-argument", required=True, type=int, help="Required Test Argument for testing with ray")
+args = parser.parse_args()    
 
 @ray.remote(num_gpus=1)
-def train() -> None:
+def train(args) -> None:
 
-    parser = argparse.ArgumentParser(
-        description=("Parse addresses for the worker to connect to.")
-    )
-    parser.add_argument("--test-argument", required=True, type=int, help="Required Test Argument for testing with ray")
-    args = parser.parse_args()    
     print(args)
+
     # cli = XaminCLI(ImageClassifier,
     #                    seed_everything_default=1337,
     #                    save_config_overwrite=True,
@@ -315,6 +316,6 @@ def train() -> None:
 
 if __name__ == '__main__':
     # main()
-    obj_ref = train.remote()
+    obj_ref = train.remote(args)
     result = ray.get(obj_ref)
     print(result)
