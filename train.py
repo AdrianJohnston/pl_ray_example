@@ -12,12 +12,15 @@ from pytorch_lightning.loggers import TensorBoardLogger
 import pytorch_lightning as pl
 from path import Path
 from pytorch_lightning.utilities.cli import LightningCLI
+# from ray_lightning import RayStrategy
 
 from network import LeNet
 
 import torchmetrics
 from jsonargparse import lazy_instance
 
+
+#TODO: Add ray_lightning plugin to train the models!
 available_models = {
     "LeNet": LeNet
 }
@@ -131,7 +134,8 @@ class ImageClassifier(LightningModule):
         return optimizer
 
 
-def main() -> None:
+@ray.remote(num_gpus=1)
+def train() -> None:
 
     cli = LightningCLI(ImageClassifier,
                        seed_everything_default=1337,
@@ -159,7 +163,10 @@ def main() -> None:
 
     cli.instantiate_classes()
     cli.trainer.fit(cli.model, datamodule=cli.datamodule)
-
+    return "SUCCESS"
 
 if __name__ == '__main__':
     main()
+    obj_ref = train.remote()
+    result = ray.get(obj_ref)
+    print(result)
