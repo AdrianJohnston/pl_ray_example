@@ -13,6 +13,7 @@ import pytorch_lightning as pl
 from path import Path
 from pytorch_lightning.utilities.cli import LightningCLI
 # from ray_lightning import RayStrategy
+import ray
 
 from network import LeNet
 
