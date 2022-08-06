@@ -192,7 +192,7 @@ def train() -> None:
 
     #cli.instantiate_classes()
     #cli.trainer.fit(cli.model, datamodule=cli.datamodule)
-    print(f"SUCCESS: {pytorch.cuda.is_available()}")
+    print(f"SUCCESS: {torch.cuda.is_available()}")
     return "SUCCESS"
 
 if __name__ == '__main__':
