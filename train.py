@@ -147,7 +147,7 @@ def train() -> None:
                        run=False,
                        trainer_defaults={"logger": lazy_instance(TensorBoardLogger, save_dir="logs")})
 
-    # cli.parser.add_argument("--node-ip-address")
+    cli.parser.add_argument("--node-ip-address")
     # cli.parser.add_argument(
     #     "--node-manager-port", required=True, type=int, help="the port of the worker's node"
     # )
