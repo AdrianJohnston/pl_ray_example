@@ -272,23 +272,25 @@ class ImageClassifier(LightningModule):
 #         )
 
 
-from jsonargparse import ArgumentParser
-parser = ArgumentParser(
-    description=("Parse addresses for the worker to connect to.")
-)
-parser.add_argument("--test-argument", required=True, type=int, help="Required Test Argument for testing with ray")
-args = parser.parse_args()    
+# from jsonargparse import ArgumentParser
+# parser = ArgumentParser(
+#     description=("Parse addresses for the worker to connect to.")
+# )
+# parser.add_argument("--test-argument", required=True, type=int, help="Required Test Argument for testing with ray")
+# args = parser.parse_args()    
+
+cli = LightningCLI(ImageClassifier,
+                       seed_everything_default=1337,
+                       save_config_overwrite=True,
+                       run=False,
+                       trainer_defaults={"logger": lazy_instance(TensorBoardLogger, save_dir="logs")})
 
 @ray.remote(num_gpus=1)
-def train(args) -> None:
+def train(cli) -> None:
 
-    print(args)
+    print(cli.model)
 
-    # cli = XaminCLI(ImageClassifier,
-    #                    seed_everything_default=1337,
-    #                    save_config_overwrite=True,
-    #                    run=False,
-    #                    trainer_defaults={"logger": lazy_instance(TensorBoardLogger, save_dir="logs")})
+   
 
     # model = cli.model
     # print(model)
@@ -316,6 +318,6 @@ def train(args) -> None:
 
 if __name__ == '__main__':
     # main()
-    obj_ref = train.remote(args)
+    obj_ref = train.remote(cli)
     result = ray.get(obj_ref)
     print(result)
