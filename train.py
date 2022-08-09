@@ -573,6 +573,6 @@ if __name__ == '__main__':
     
     # result = train()
     
-    obj_ref = train.remote(args)
+    obj_ref = train.remote(cli)
     result = ray.get(obj_ref)
     print(result)
