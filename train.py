@@ -138,7 +138,7 @@ class ImageClassifier(LightningModule):
 @ray.remote(num_gpus=1)
 def train(cli: XaminCLI) -> None:
 
-    cli.delayed_init()
+    cli.init_on_worker()
     print(cli.model)
 
     # TODO: GPU not availble in head node

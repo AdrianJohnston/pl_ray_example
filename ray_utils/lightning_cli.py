@@ -12,7 +12,7 @@ This file serves as a replacement/mokeypatch to the LightningCLI.
 The main change, is that the LightningCLI does not call self.instantiate_classes()
 during the constructor phase. 
 
-The XaminCLI adds a deplayed_init() method to only instantiate the 
+The XaminCLI adds a init_on_worker() method to only instantiate the 
 trainer, model and datamodules and optimser after the worker node has recieved 
 the serialised LightningCLI. 
 
@@ -209,7 +209,7 @@ class XaminCLI(LightningCLI):
         if seed is not None:
             seed_everything(seed, workers=True)
 
-    def delayed_init(self):
+    def init_on_worker(self):
         self.before_instantiate_classes()
         self.instantiate_classes()
 
