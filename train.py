@@ -327,4 +327,4 @@ if __name__ == '__main__':
     
     # obj_ref = train.remote(cli)
     # result = ray.get(obj_ref)
-    # print(result)
+    print(result)
