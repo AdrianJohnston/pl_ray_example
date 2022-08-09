@@ -6,7 +6,7 @@ from pytorch_lightning.utilities.cli import SaveConfigCallback
 from pytorch_lightning.utilities.meta import get_all_subclasses
 import inspect
 from torch.optim import Optimizer
-
+from pytorch_lightning.utilities.cli import LightningCLI, LightningArgumentParser
 
 '''
 This file serves as a replacement/mokeypatch to the LightningCLI.
