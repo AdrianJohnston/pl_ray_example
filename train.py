@@ -21,8 +21,6 @@ from network import LeNet
 import torchmetrics
 from jsonargparse import lazy_instance
 
-ray.init(num_gpus=1)
-
 # TODO: Add ray_lightning plugin to train the models!
 available_models = {
     "LeNet": LeNet
