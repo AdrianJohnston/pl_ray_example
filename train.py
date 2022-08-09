@@ -21,6 +21,7 @@ from network import LeNet
 import torchmetrics
 from jsonargparse import lazy_instance
 
+ray.init("auto", num_gpus=1)
 
 # TODO: Add ray_lightning plugin to train the models!
 available_models = {
@@ -290,7 +291,7 @@ cli = XaminCLI(ImageClassifier,
                        run=False,
                        trainer_defaults={"logger": lazy_instance(TensorBoardLogger, save_dir="logs")})
 
-@ray.remote(num_gpus=1)
+# @ray.remote(num_gpus=1)
 def train(cli) -> None:
 
     print(cli.model)
@@ -322,7 +323,8 @@ def train(cli) -> None:
 
 
 if __name__ == '__main__':
-    # main()
-    obj_ref = train.remote(cli)
-    result = ray.get(obj_ref)
-    print(result)
+    result = train()
+    
+    # obj_ref = train.remote(cli)
+    # result = ray.get(obj_ref)
+    # print(result)
