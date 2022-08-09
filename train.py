@@ -283,6 +283,7 @@ from pytorch_lightning import Callback, LightningDataModule, LightningModule, se
 from pytorch_lightning.utilities.cli import SaveConfigCallback, ReduceLROnPlateau
 from pytorch_lightning.utilities.meta import get_all_subclasses
 import inspect
+from torch.optim import Optimizer
 
 class _Registry(dict):
     def __call__(self, cls: Type, key: Optional[str] = None, override: bool = False) -> Type:
@@ -336,6 +337,12 @@ MODEL_REGISTRY = _Registry()
 DATAMODULE_REGISTRY = _Registry()
 LOGGER_REGISTRY = _Registry()
 
+class ReduceLROnPlateau(torch.optim.lr_scheduler.ReduceLROnPlateau):
+    def __init__(self, optimizer: Optimizer, monitor: str, *args: Any, **kwargs: Any) -> None:
+        super().__init__(optimizer, *args, **kwargs)
+        self.monitor = monitor
+
+
 def _populate_registries(subclasses: bool) -> None:
     if subclasses:
         # this will register any subclasses from all loaded modules including userland
@@ -359,6 +366,8 @@ def _populate_registries(subclasses: bool) -> None:
         LOGGER_REGISTRY.register_classes(pl.loggers, pl.loggers.LightningLoggerBase)
     # `ReduceLROnPlateau` does not subclass `_LRScheduler`
     LR_SCHEDULER_REGISTRY(cls=ReduceLROnPlateau)
+
+
 
 class XaminCLI(LightningCLI):
 
