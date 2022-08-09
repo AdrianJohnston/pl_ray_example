@@ -280,7 +280,7 @@ class ImageClassifier(LightningModule):
 from types import MethodType, ModuleType
 from typing import Any, Callable, Dict, Generator, List, Optional, Set, Tuple, Type, Union
 from pytorch_lightning import Callback, LightningDataModule, LightningModule, seed_everything, Trainer
-from pytorch_lightning.utilities.cli import SaveConfigCallback, ReduceLROnPlateau
+from pytorch_lightning.utilities.cli import SaveConfigCallback
 from pytorch_lightning.utilities.meta import get_all_subclasses
 import inspect
 from torch.optim import Optimizer
