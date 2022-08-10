@@ -167,7 +167,7 @@ if __name__ == '__main__':
                        seed_everything_default=1337,
                        save_config_overwrite=True,
                        run=False,
-                       trainer_defaults={"logger": lazy_instance(CSVLogger, save_dir=save_url)})
+                       trainer_defaults={"logger": lazy_instance(CSVLogger, save_dir="logs")})
     
     obj_ref = train.remote(cli)
     result = ray.get(obj_ref)
