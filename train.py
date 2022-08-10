@@ -9,7 +9,7 @@ from torchvision import datasets, transforms
 from torch.utils.data import DataLoader, random_split
 from torchvision.datasets import MNIST
 from omegaconf import DictConfig, OmegaConf
-from pytorch_lightning.loggers import TensorBoardLogger
+from pytorch_lightning.loggers import TensorBoardLogger, CSVLogger
 import pytorch_lightning as pl
 from path import Path
 
@@ -21,6 +21,17 @@ from network import LeNet
 
 import torchmetrics
 from jsonargparse import lazy_instance
+
+XAMIN_JOB_BUCKET = os.environ.get("JOB_BUCKET")
+XAMIN_JOB_ID = os.environ.get("XAMIN_JOB_ID")
+XAMIN_USER_ID = os.environ.get("XAMIN_USER_ID")
+XAMIN_ORG_ID = os.environ.get("XAMIN_ORG_ID")
+
+print(f"XAMIN_JOB_ID={XAMIN_JOB_ID}")
+print(f"XAMIN_JOB_ID={XAMIN_JOB_ID}")
+print(f"XAMIN_USER_ID={XAMIN_USER_ID}")
+print(f"XAMIN_ORG_ID={XAMIN_ORG_ID}")
+
 
 # TODO: Add ray_lightning plugin to train the models!
 available_models = {
@@ -141,44 +152,22 @@ def train(cli: XaminCLI) -> None:
     cli.init_on_worker()
     print(cli.model)
 
-    XAMIN_JOB_ID = os.environ.get("XAMIN_JOB_ID")
-    XAMIN_USER_ID = os.environ.get("XAMIN_USER_ID")
-    XAMIN_ORG_ID = os.environ.get("XAMIN_ORG_ID")
+   
 
-    print(f"XAMIN_JOB_ID={XAMIN_JOB_ID}")
-    print(f"XAMIN_USER_ID={XAMIN_USER_ID}")
-    print(f"XAMIN_ORG_ID={XAMIN_ORG_ID}")
-
-    # tb_logger = None  # TensorBoardLogger(save_dir='tb-logs')
-    # lr_logger = pl.callbacks.LearningRateLogger()
-
-    # early_stopping_cb = None
-    # checkpoint_cb = pl.callbacks.ModelCheckpoint('weights/{epoch}',
-    #                                              monitor='val/loss',
-    #                                              mode='max',
-    #                                              save_top_k=3)
-
-    # trainer = pl.Trainer(logger=[tb_logger],
-    #                      checkpoint_callback=checkpoint_cb,
-    #                      callbacks=[],
-    #                      **cfg.trainer)
-    # trainer.fit(model)
-
-    # cli.instantiate_classes()
-    
-    # cli.trainer.fit(cli.model, datamodule=cli.datamodule)
-
+    cli.trainer.fit(cli.model, datamodule=cli.datamodule)
     print(f"SUCCESS: {torch.cuda.is_available()}")
     return "SUCCESS"
 
+ 
 
 if __name__ == '__main__':
 
+    save_url = f"s3://{XAMIN_JOB_BUCKET}/training-job-test/{XAMIN_ORG_ID}/{XAMIN_USER_ID}/jobs/{XAMIN_JOB_ID}"
     cli = XaminCLI(ImageClassifier,
                        seed_everything_default=1337,
                        save_config_overwrite=True,
                        run=False,
-                       trainer_defaults={"logger": lazy_instance(TensorBoardLogger, save_dir="logs")})
+                       trainer_defaults={"logger": lazy_instance(CSVLogger, save_dir="s3://")})
     
     obj_ref = train.remote(cli)
     result = ray.get(obj_ref)
