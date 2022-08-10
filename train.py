@@ -142,8 +142,8 @@ def train(cli: XaminCLI) -> None:
     print(cli.model)
 
     XAMIN_JOB_ID = os.environ.get("XAMIN_JOB_ID")
-    XAMIN_USER_ID = os.environ.get("XAMIN_USER_ID"),
-    XAMIN_ORG_ID = os.environ.get("XAMIN_ORG_ID"),
+    XAMIN_USER_ID = os.environ.get("XAMIN_USER_ID")
+    XAMIN_ORG_ID = os.environ.get("XAMIN_ORG_ID")
 
     print(f"XAMIN_JOB_ID={XAMIN_JOB_ID}")
     print(f"XAMIN_USER_ID={XAMIN_USER_ID}")
