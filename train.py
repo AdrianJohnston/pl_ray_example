@@ -27,7 +27,7 @@ XAMIN_JOB_ID = os.environ.get("XAMIN_JOB_ID")
 XAMIN_USER_ID = os.environ.get("XAMIN_USER_ID")
 XAMIN_ORG_ID = os.environ.get("XAMIN_ORG_ID")
 
-print(f"XAMIN_JOB_ID={XAMIN_JOB_ID}")
+print(f"XAMIN_JOB_BUCKET={XAMIN_JOB_BUCKET}")
 print(f"XAMIN_JOB_ID={XAMIN_JOB_ID}")
 print(f"XAMIN_USER_ID={XAMIN_USER_ID}")
 print(f"XAMIN_ORG_ID={XAMIN_ORG_ID}")
@@ -167,7 +167,7 @@ if __name__ == '__main__':
                        seed_everything_default=1337,
                        save_config_overwrite=True,
                        run=False,
-                       trainer_defaults={"logger": lazy_instance(CSVLogger, save_dir="s3://")})
+                       trainer_defaults={"logger": lazy_instance(CSVLogger, save_dir=save_url)})
     
     obj_ref = train.remote(cli)
     result = ray.get(obj_ref)
