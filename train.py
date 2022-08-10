@@ -161,7 +161,11 @@ def train(cli: XaminCLI) -> None:
 
     # cli.instantiate_classes()
     
-    cli.trainer.fit(cli.model, datamodule=cli.datamodule)
+    # cli.trainer.fit(cli.model, datamodule=cli.datamodule)
+
+    for k, v in  os.environ.items():
+        print(f"{k}={v}")
+
     print(f"SUCCESS: {torch.cuda.is_available()}")
     return "SUCCESS"
 
