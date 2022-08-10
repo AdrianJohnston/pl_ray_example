@@ -141,9 +141,14 @@ def train(cli: XaminCLI) -> None:
     cli.init_on_worker()
     print(cli.model)
 
-    # TODO: GPU not availble in head node
+    XAMIN_JOB_ID = os.environ.get("XAMIN_JOB_ID")
+    XAMIN_USER_ID = os.environ.get("XAMIN_USER_ID"),
+    XAMIN_ORG_ID = os.environ.get("XAMIN_ORG_ID"),
 
-    
+    print(f"XAMIN_JOB_ID={XAMIN_JOB_ID}")
+    print(f"XAMIN_USER_ID={XAMIN_USER_ID}")
+    print(f"XAMIN_ORG_ID={XAMIN_ORG_ID}")
+
     # tb_logger = None  # TensorBoardLogger(save_dir='tb-logs')
     # lr_logger = pl.callbacks.LearningRateLogger()
 
@@ -162,9 +167,6 @@ def train(cli: XaminCLI) -> None:
     # cli.instantiate_classes()
     
     # cli.trainer.fit(cli.model, datamodule=cli.datamodule)
-
-    for k, v in  os.environ.items():
-        print(f"{k}={v}")
 
     print(f"SUCCESS: {torch.cuda.is_available()}")
     return "SUCCESS"
