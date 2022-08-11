@@ -22,7 +22,7 @@ from network import LeNet
 import torchmetrics
 from jsonargparse import lazy_instance
 
-XAMIN_JOB_BUCKET = os.environ.get("JOB_BUCKET")
+XAMIN_JOB_BUCKET = os.environ.get("UPLOAD_BUCKET")
 XAMIN_JOB_ID = os.environ.get("XAMIN_JOB_ID")
 XAMIN_USER_ID = os.environ.get("XAMIN_USER_ID")
 XAMIN_ORG_ID = os.environ.get("XAMIN_ORG_ID")
