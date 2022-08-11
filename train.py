@@ -159,6 +159,13 @@ def train(cli: XaminCLI) -> None:
     return "SUCCESS"
 
  
+class XaminLogging(pl.Callback):
+    def on_train_start(self, trainer, pl_module):
+        print("Training is starting")
+
+    def on_train_end(self, trainer, pl_module):
+        print("Training is ending")
+
 
 if __name__ == '__main__':
 
@@ -167,7 +174,7 @@ if __name__ == '__main__':
                        seed_everything_default=1337,
                        save_config_overwrite=True,
                        run=False,
-                       trainer_defaults={"logger": lazy_instance(CSVLogger, save_dir="logs")})
+                       trainer_defaults={"logger": lazy_instance(TensorBoardLogger, save_dir=save_url)})
     
     obj_ref = train.remote(cli)
     result = ray.get(obj_ref)
