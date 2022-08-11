@@ -133,7 +133,7 @@ class ImageClassifier(LightningModule):
         return self.network(images)
 
     def validation_epoch_end(self, val_outputs):
-        acc = self.validation_metrics['accuracy'].compute().cpu().item() * 100
+        acc = self.validation_metrics['accuracy'].compute().cpu() * 100
         self.log('val/accuracy', acc, prog_bar=True)
 
     def configure_optimizers(self):
@@ -151,9 +151,6 @@ def train(cli: XaminCLI) -> None:
 
     cli.init_on_worker()
     print(cli.model)
-
-   
-
     cli.trainer.fit(cli.model, datamodule=cli.datamodule)
     print(f"SUCCESS: {torch.cuda.is_available()}")
     return "SUCCESS"
