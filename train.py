@@ -167,6 +167,7 @@ class XaminLogging(pl.Callback):
 if __name__ == '__main__':
 
     save_url = f"s3://{XAMIN_JOB_BUCKET}/training-job-test/{XAMIN_ORG_ID}/{XAMIN_USER_ID}/jobs/{XAMIN_JOB_ID}"
+    print(f"SAVE_URL: {save_url}")
     cli = XaminCLI(ImageClassifier,
                        seed_everything_default=1337,
                        save_config_overwrite=True,
