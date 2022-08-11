@@ -12,7 +12,7 @@ from omegaconf import DictConfig, OmegaConf
 from pytorch_lightning.loggers import TensorBoardLogger, CSVLogger
 import pytorch_lightning as pl
 from path import Path
-
+from pytorch_lightning.utilities.cli import LightningCLI
 # from ray_lightning import RayStrategy
 
 import ray
@@ -146,6 +146,7 @@ class ImageClassifier(LightningModule):
 
         return optimizer
 
+
 @ray.remote(num_gpus=1)
 def train(cli: XaminCLI) -> None:
 
@@ -155,25 +156,26 @@ def train(cli: XaminCLI) -> None:
     print(f"SUCCESS: {torch.cuda.is_available()}")
     return "SUCCESS"
 
- 
-class XaminLogging(pl.Callback):
-    def on_train_start(self, trainer, pl_module):
-        print("Training is starting")
 
-    def on_train_end(self, trainer, pl_module):
-        print("Training is ending")
+# class XaminLogging(pl.Callback):
+#     def on_train_start(self, trainer, pl_module):
+#         print("Training is starting")
+
+#     def on_train_end(self, trainer, pl_module):
+#         print("Training is ending")
 
 
 if __name__ == '__main__':
 
     save_url = f"s3://{XAMIN_JOB_BUCKET}/training-job-test/{XAMIN_ORG_ID}/{XAMIN_USER_ID}/jobs/{XAMIN_JOB_ID}"
     print(f"SAVE_URL: {save_url}")
+    print(f"LIGHTNING VERSION: {pl.__version__}")
     cli = XaminCLI(ImageClassifier,
-                       seed_everything_default=1337,
-                       save_config_overwrite=True,
-                       run=False,
-                       trainer_defaults={"logger": lazy_instance(TensorBoardLogger, save_dir=save_url)})
-    
+                   seed_everything_default=1337,
+                   save_config_overwrite=True,
+                   run=False,
+                   trainer_defaults={"logger": lazy_instance(TensorBoardLogger, save_dir=save_url)})
+
     obj_ref = train.remote(cli)
     result = ray.get(obj_ref)
     print(result)
