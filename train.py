@@ -176,7 +176,7 @@ if __name__ == '__main__':
     print(f"SAVE_URL: {save_url}")
     print(f"LIGHTNING VERSION: {pl.__version__}")
     trainer_defaults = {
-        "logger": lazy_instance(XaminLogger, save_dir=save_url)
+        "logger": lazy_instance(TensorBoardLogger, save_dir=save_url)
     }
   
     cli = XaminCLI(ImageClassifier,
