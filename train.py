@@ -17,7 +17,6 @@ from pytorch_lightning.utilities.cli import LightningCLI
 
 import ray
 from ray_utils.lightning_cli import XaminCLI
-from ray_utils.XaminLogger import XaminLogger
 from network import LeNet
 
 import torchmetrics
