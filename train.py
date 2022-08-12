@@ -172,7 +172,7 @@ def train_local(cli: XaminCLI) -> None:
 if __name__ == '__main__':
 
     # save_url = f"s3://{XAMIN_JOB_BUCKET}/training-job-test/{XAMIN_ORG_ID}/{XAMIN_USER_ID}/jobs/{XAMIN_JOB_ID}"
-    save_dir = './logs'
+    save_url = './logs'
     print(f"SAVE_URL: {save_url}")
     print(f"LIGHTNING VERSION: {pl.__version__}")
     trainer_defaults = {
