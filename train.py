@@ -14,6 +14,7 @@ import pytorch_lightning as pl
 from path import Path
 from pytorch_lightning.utilities.cli import LightningCLI
 # from ray_lightning import RayStrategy
+import tensorboard
 
 import ray
 from ray_utils.lightning_cli import XaminCLI
@@ -113,7 +114,7 @@ class ImageClassifier(LightningModule):
         x, y = batch
         logits = self(x)
         loss = F.nll_loss(logits, y)
-        results = {"train/loss": loss}
+        results = {"train/loss": torch.FloatTensor(loss)}
         self.log_dict(results, prog_bar=True, on_step=True)
         return loss
 
@@ -153,7 +154,6 @@ class ImageClassifier(LightningModule):
         return optimizer
 
 
-import tensorboard
 @ray.remote(num_gpus=1)
 def train(cli: XaminCLI) -> None:
     cli.init_on_worker()
