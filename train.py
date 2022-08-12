@@ -17,6 +17,7 @@ from pytorch_lightning.utilities.cli import LightningCLI
 
 import ray
 from ray_utils.lightning_cli import XaminCLI
+from ray_utils.XaminLogger import XaminLogger
 from network import LeNet
 
 import torchmetrics
@@ -111,7 +112,7 @@ class ImageClassifier(LightningModule):
         x, y = batch
         logits = self(x)
         loss = F.nll_loss(logits, y)
-        self.log('train/loss', loss, prog_bar=True)
+        self.log('train/loss', loss, prog_bar=True, on_step=True)
         return loss
 
     def validation_step(self, batch, batch_idx):
@@ -126,7 +127,7 @@ class ImageClassifier(LightningModule):
         for metric_name, metric in self.validation_metrics.items():
             metric_result = metric(preds, targets)
 
-        self.log('val/loss', val_loss, prog_bar=True)
+        self.log('val/loss', val_loss, prog_bar=True, on_step=True)
         return {'val_loss': val_loss}
 
     def forward(self, images):
@@ -147,7 +148,7 @@ class ImageClassifier(LightningModule):
         return optimizer
 
 
-@ray.remote(num_gpus=1)
+# @ray.remote(num_gpus=1)
 def train(cli: XaminCLI) -> None:
 
     cli.init_on_worker()
@@ -157,25 +158,47 @@ def train(cli: XaminCLI) -> None:
     return "SUCCESS"
 
 
-# class XaminLogging(pl.Callback):
-#     def on_train_start(self, trainer, pl_module):
-#         print("Training is starting")
+class XaminAPI():
+    def __init__(self, func, *args, **kwargs):
+        self.func = func
+        self.args = args
+        self.kwargs = kwargs
+        self.resources = kwargs.pop('resources')
+        print(f"Resources: {self.resources}, {self.kwargs}")
+    
+    def __enter__(self):
 
-#     def on_train_end(self, trainer, pl_module):
-#         print("Training is ending")
+        @ray.remote(**self.resources)
+        def __ray_fn(*args, **kwargs):
+            return self.func(*args, **kwargs)
+        
+        if ray.is_initialized():
+            obj_ref = __ray_fn.remote(*self.args, **self.kwargs)
+            result = ray.get(obj_ref)
+        else:
+            # TODO: Add logging warning for running locally.
+            return self.func(*self.args, **self.kwargs)
+        return result
 
+    def __exit__(self, type, value, traceback):
+        pass
+        
 
 if __name__ == '__main__':
 
     save_url = f"s3://{XAMIN_JOB_BUCKET}/training-job-test/{XAMIN_ORG_ID}/{XAMIN_USER_ID}/jobs/{XAMIN_JOB_ID}"
     print(f"SAVE_URL: {save_url}")
     print(f"LIGHTNING VERSION: {pl.__version__}")
+    trainer_defaults = {
+        "logger": lazy_instance(TensorBoardLogger, save_dir=save_url)
+    }
+  
     cli = XaminCLI(ImageClassifier,
                    seed_everything_default=1337,
                    save_config_overwrite=True,
                    run=False,
-                   trainer_defaults={"logger": lazy_instance(TensorBoardLogger, save_dir=save_url)})
+                   trainer_defaults=trainer_defaults)
 
-    obj_ref = train.remote(cli)
-    result = ray.get(obj_ref)
-    print(result)
+    with XaminAPI(train, cli, resources={'num_gpus': 1}) as result:
+        print(f'Result:{result}')
+

@@ -213,12 +213,13 @@ class XaminCLI(LightningCLI):
 
     def init_on_worker(self):
         self.before_instantiate_classes()
+        # print('Before Classes init')
         self.instantiate_classes()
-
+        # print('In init')
         if self.subcommand is not None:
             self._run_subcommand(self.subcommand)
 
-    def add_arguments_to_parser(self, parser):
-        parser.add_argument("--test-argument", required=True, type=int, help="Required Test Argument for testing with ray")
+    # def add_arguments_to_parser(self, parser):
+    #     parser.add_argument("--test-argument", required=True, type=int, help="Required Test Argument for testing with ray")
 
  
