@@ -153,11 +153,12 @@ class ImageClassifier(LightningModule):
         return optimizer
 
 
+import tensorboard
 @ray.remote(num_gpus=1)
 def train(cli: XaminCLI) -> None:
     cli.init_on_worker()
-    cli.trainer.fit(cli.model, datamodule=cli.datamodule)
-    print(f"SUCCESS: {torch.cuda.is_available()}")
+    # cli.trainer.fit(cli.model, datamodule=cli.datamodule)
+    print(f"SUCCESS: {torch.cuda.is_available()} {tensorboard.__version__}")
     return "SUCCESS"
 
 
