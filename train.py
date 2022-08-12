@@ -13,7 +13,7 @@ from pytorch_lightning.loggers import TensorBoardLogger, CSVLogger
 import pytorch_lightning as pl
 from path import Path
 from pytorch_lightning.utilities.cli import LightningCLI
-# from ray_lightning import RayStrategy
+from ray_utils.XaminLogger import XaminLogger
 import tensorboard
 
 import ray
@@ -176,7 +176,7 @@ if __name__ == '__main__':
     print(f"SAVE_URL: {save_url}")
     print(f"LIGHTNING VERSION: {pl.__version__}")
     trainer_defaults = {
-        "logger": lazy_instance(TensorBoardLogger, save_dir=save_url)
+        "logger": lazy_instance(XaminLogger, save_dir=save_url)
     }
   
     cli = XaminCLI(ImageClassifier,

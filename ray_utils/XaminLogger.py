@@ -103,38 +103,11 @@ class ExperimentWriter:
             last_m.update(m)
         metrics_keys = list(last_m.keys())
 
-        # if "s3://" in self.metrics_file_path:
-        #     file_uri = f"simplecache::{self.metrics_file_path}"
-        #     print(f"Using {file_uri}")
-        # else: 
-        #     file_uri = self.metrics_file_path
-        
-
-        # with open('metrics.csv', "w", newline="") as f:
-        #     writer = csv.DictWriter(f, fieldnames=metrics_keys)
-        #     writer.writeheader()
-        #     writer.writerows(self.metrics)
-        
-        # with open('metrics.csv', "r", newline="") as f:
-        #     print(f.readlines())
-        
-        # tmp = open("metrics.csv", mode="w+", newline="")
-        # tmp = tempfile.NamedTemporaryFile(mode="w", newline="", delete=False)
-
-        #try:
-        # with tempfile.NamedTemporaryFile(mode="w", newline="", delete=False) as tmp:
-        with open("metrics.csv", mode="w", newline="") as tmp:
-        
-            # print(tmp.name)
+        with self._fs.open(self.metrics_file_path, mode="w", newline="") as tmp:
             writer = csv.DictWriter(tmp, fieldnames=metrics_keys)
             writer.writeheader()
             writer.writerows(self.metrics)
-            # tmp.seek(0)
-            # print(tmp.readlines())
-        #finally:
-        #    tmp.close()
-            # os.unlink(tmp.name)
-
+            
         
         if False:
             try:
