@@ -180,10 +180,8 @@ if __name__ == '__main__':
                    trainer_defaults=trainer_defaults)
 
     if XAMIN_RUN_LOCAL:
-        print("Running Local")
         train_local(cli)
     else:
-        print("Running Remote")
         obj_ref = train.remote(cli=cli)
         result = ray.get(obj_ref)
 
