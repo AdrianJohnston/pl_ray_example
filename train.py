@@ -27,6 +27,8 @@ XAMIN_JOB_ID = os.environ.get("XAMIN_JOB_ID")
 XAMIN_USER_ID = os.environ.get("XAMIN_USER_ID")
 XAMIN_ORG_ID = os.environ.get("XAMIN_ORG_ID")
 
+XAMIN_RUN_LOCAL = os.environ.get("XAMIN_LOCAL")
+
 print(f"XAMIN_JOB_BUCKET={XAMIN_JOB_BUCKET}")
 print(f"XAMIN_JOB_ID={XAMIN_JOB_ID}")
 print(f"XAMIN_USER_ID={XAMIN_USER_ID}")
@@ -149,40 +151,18 @@ class ImageClassifier(LightningModule):
 
 @ray.remote(num_gpus=1)
 def train(cli: XaminCLI) -> None:
-
     cli.init_on_worker()
-    print(cli.model)
     cli.trainer.fit(cli.model, datamodule=cli.datamodule)
     print(f"SUCCESS: {torch.cuda.is_available()}")
     return "SUCCESS"
 
 
-class XaminAPI():
-    def __init__(self, func, *args, **kwargs):
-        self.func = func
-        self.args = args
-        self.kwargs = kwargs
-        self.resources = kwargs.pop('resources')
-        print(f"Resources: {self.resources}, {self.kwargs}")
-    
-    def __enter__(self):
+def train_local(cli: XaminCLI) -> None:
+    cli.init_on_worker()
+    cli.trainer.fit(cli.model, datamodule=cli.datamodule)
+    print(f"SUCCESS: {torch.cuda.is_available()}")
+    return "SUCCESS"
 
-        @ray.remote(**self.resources)
-        def __ray_fn(*args, **kwargs):
-            return self.func(*args, **kwargs)
-        
-        print(f"Ray Status: {ray.is_initialized()}")
-        if ray.is_initialized():
-            obj_ref = __ray_fn.remote(*self.args, **self.kwargs)
-            result = ray.get(obj_ref)
-        else:
-            # TODO: Add logging warning for running locally.
-            return self.func(*self.args, **self.kwargs)
-        return result
-
-    def __exit__(self, type, value, traceback):
-        pass
-        
 
 if __name__ == '__main__':
 
@@ -199,6 +179,9 @@ if __name__ == '__main__':
                    run=False,
                    trainer_defaults=trainer_defaults)
 
-    with XaminAPI(train, cli, resources={'num_gpus': 1}) as result:
-        print(f'Result:{result}')
+    if XAMIN_RUN_LOCAL:
+        train_local(cli)
+    else:
+        obj_ref = train.remote(cli=cli)
+        result = ray.get(obj_ref)
 
