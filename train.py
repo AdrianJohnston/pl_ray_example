@@ -113,7 +113,8 @@ class ImageClassifier(LightningModule):
         x, y = batch
         logits = self(x)
         loss = F.nll_loss(logits, y)
-        self.log('train/loss', loss, prog_bar=True, on_step=True)
+        results = {"train/loss": loss}
+        self.log_dict(results, prog_bar=True, on_step=True)
         return loss
 
     def validation_step(self, batch, batch_idx):
@@ -125,10 +126,13 @@ class ImageClassifier(LightningModule):
             dim=1)  # get the index of the max log-probability
 
         results = {'val/loss': val_loss}
+        # Run the metrics on each set
         for metric_name, metric in self.validation_metrics.items():
             metric_result = metric(preds, targets)
+        
+        self.log_dict(results, prog_bar=True, on_step=True)
 
-        self.log('val/loss', val_loss, prog_bar=True, on_step=True)
+        # self.log('val/loss', val_loss, prog_bar=True, on_step=True)
         return {'val_loss': val_loss}
 
     def forward(self, images):
