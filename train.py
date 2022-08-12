@@ -171,6 +171,7 @@ class XaminAPI():
         def __ray_fn(*args, **kwargs):
             return self.func(*args, **kwargs)
         
+        print(f"Ray Status: {ray.is_initialized()}")
         if ray.is_initialized():
             obj_ref = __ray_fn.remote(*self.args, **self.kwargs)
             result = ray.get(obj_ref)
