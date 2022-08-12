@@ -147,7 +147,7 @@ class ImageClassifier(LightningModule):
         return optimizer
 
 
-# @ray.remote(num_gpus=1)
+@ray.remote(num_gpus=1)
 def train(cli: XaminCLI) -> None:
 
     cli.init_on_worker()
