@@ -114,7 +114,7 @@ class ImageClassifier(LightningModule):
         x, y = batch
         logits = self(x)
         loss = F.nll_loss(logits, y)
-        results = {"train/loss": torch.FloatTensor(loss)}
+        results = {"train/loss": loss}
         self.log_dict(results, prog_bar=True, on_step=True)
         return loss
 
